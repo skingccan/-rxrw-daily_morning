@@ -5,6 +5,7 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
+from lxml import etree
 
 today = datetime.now()
 start_date = os.environ['START_DATE']
@@ -35,10 +36,15 @@ def get_birthday():
   return (next - today).days
 
 def get_words():
-  words = requests.get("https://api.shadiao.pro/chp")
+  words = requests.get("https://www.unjs.com/z/1577124.html")
+  words.encoding='gb2312'
   if words.status_code != 200:
-    return get_words()
-  return words.json()['data']['text']
+     return get_words()
+  # return words.json()['data']['text']
+  i=random.randint(4,191)
+  word=etree.HTML(words.text)
+  word1=word.xpath(f"/html/body/div[2]/div[1]/div/div[2]/p[{i}]/text()")[0]
+  return word1
 
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
